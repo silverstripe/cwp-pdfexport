@@ -1,0 +1,10 @@
+---
+Name: cwppdfexportextensions
+---
+CWP\CWP\PageTypes\BasePage:
+  extensions:
+    - CWP\PDFExport\Extensions\PdfExportExtension
+
+CWP\CWP\PageTypes\BasePageController:
+  extensions:
+    - CWP\PDFExport\Extensions\PdfExportControllerExtension
