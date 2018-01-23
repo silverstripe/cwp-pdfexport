@@ -7,6 +7,8 @@ use SilverStripe\Dev\BuildTask;
 
 class CleanupGeneratedPdfBuildTask extends BuildTask
 {
+    private static $segment = 'CleanupGeneratedPdfBuildTask';
+
     protected $title = 'Cleanup generated PDFs';
 
     protected $description = 'Removes generated PDFs on the site, forcing a regeneration of all exports to PDF '

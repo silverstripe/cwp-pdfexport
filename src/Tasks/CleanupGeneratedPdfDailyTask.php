@@ -33,6 +33,8 @@ class CleanupGeneratedPdfDailyTask implements CronTask
      */
     private static $enabled = false;
 
+    private static $segment = 'CleanupGeneratedPdfDailyTask';
+
     public function getSchedule()
     {
         return $this->config()->get('schedule');
