@@ -24,7 +24,7 @@ class PdfExportControllerExtension extends Extension
      */
     public function downloadpdf()
     {
-        if (!$this->owner->data()->get('pdf_export')) {
+        if (!$this->owner->data()->config()->get('pdf_export')) {
             return false;
         }
 
@@ -48,8 +48,8 @@ class PdfExportControllerExtension extends Extension
     public function getPDFBaseURL()
     {
         // if base url YML is defined in YML, use that
-        if ($this->owner->data()->get('pdf_base_url')) {
-            $pdfBaseUrl = $this->owner->data()->get('pdf_base_url').'/';
+        if ($this->owner->data()->config()->get('pdf_base_url')) {
+            $pdfBaseUrl = $this->owner->data()->config()->get('pdf_base_url').'/';
             // otherwise, if we are CWP use the secure domain
         } elseif (Environment::getEnv('CWP_SECURE_DOMAIN')) {
             $pdfBaseUrl = Environment::getEnv('CWP_SECURE_DOMAIN') . '/';
@@ -85,11 +85,11 @@ class PdfExportControllerExtension extends Extension
      */
     public function generatePDF()
     {
-        if (!$this->owner->data()->get('pdf_export')) {
+        if (!$this->owner->data()->config()->get('pdf_export')) {
             return false;
         }
 
-        $binaryPath = $this->owner->data()->get('wkhtmltopdf_binary');
+        $binaryPath = $this->owner->data()->config()->get('wkhtmltopdf_binary');
         if (!$binaryPath || !is_executable($binaryPath)) {
             if (Environment::getEnv('WKHTMLTOPDF_BINARY')
                 && is_executable(Environment::getEnv('WKHTMLTOPDF_BINARY'))
@@ -133,13 +133,13 @@ class PdfExportControllerExtension extends Extension
         $bodyViewer = $this->owner->getViewer('pdf');
 
         // write the output of this page to HTML, ready for conversion to PDF
-        file_put_contents($bodyFile, $bodyViewer->process($this));
+        file_put_contents($bodyFile, $bodyViewer->process($this->owner));
 
         // get the viewer for the current template with _pdffooter
         $footerViewer = $this->owner->getViewer('pdffooter');
 
         // write the output of the footer template to HTML, ready for conversion to PDF
-        file_put_contents($footerFile, $footerViewer->process($this));
+        file_put_contents($footerFile, $footerViewer->process($this->owner));
 
         //decide what the proxy should look like
         $proxy = $this->owner->getPDFProxy($pdfBaseUrl);
