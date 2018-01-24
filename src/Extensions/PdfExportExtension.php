@@ -65,7 +65,7 @@ class PdfExportExtension extends DataExtension
             return false;
         }
 
-        $path = $this->owner->getPdfFilename();
+        $path = $this->getPdfFilename();
 
         if ((Versioned::get_stage() === Versioned::LIVE) && file_exists($path)) {
             return Director::baseURL() . preg_replace('#^/#', '', Director::makeRelative($path));
@@ -78,7 +78,7 @@ class PdfExportExtension extends DataExtension
      */
     public function onAfterPublish()
     {
-        $filepath = $this->owner->getPdfFilename();
+        $filepath = $this->getPdfFilename();
         if (file_exists($filepath)) {
             unlink($filepath);
         }
@@ -89,7 +89,7 @@ class PdfExportExtension extends DataExtension
      */
     public function doUnpublish()
     {
-        $filepath = $this->owner->getPdfFilename();
+        $filepath = $this->getPdfFilename();
         if (file_exists($filepath)) {
             unlink($filepath);
         }
