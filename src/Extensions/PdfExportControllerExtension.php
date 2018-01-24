@@ -99,7 +99,10 @@ class PdfExportControllerExtension extends Extension
         }
 
         if (!$binaryPath) {
-            user_error('Neither WKHTMLTOPDF_BINARY nor BasePage.wkhtmltopdf_binary are defined', E_USER_ERROR);
+            user_error(
+                'Neither WKHTMLTOPDF_BINARY nor ' . get_class($this->owner->data()) . '.wkhtmltopdf_binary are defined',
+                E_USER_ERROR
+            );
         }
 
         if (Versioned::get_reading_mode() == 'Stage.Stage') {
