@@ -87,7 +87,7 @@ class PdfExportExtension extends DataExtension
     /**
      * Remove linked pdf when unpublishing the page, so it's no longer valid.
      */
-    public function doUnpublish()
+    public function onAfterUnpublish()
     {
         $filepath = $this->getPdfFilename();
         if (file_exists($filepath)) {
