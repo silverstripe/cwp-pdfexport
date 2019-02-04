@@ -19,6 +19,10 @@ Install using Composer:
 composer require cwp/cwp-pdfexport
 ```
 
+## Configuration
+
+For further information on installing and configuring this module, see [the CWP documentation](https://github.com/silverstripe/cwp/blob/master/docs/en/02_Features/pdf_export.md).
+
 ## Bugtracker
 
 Bugs are tracked on [github.com](https://github.com/silverstripe/cwp-pdfexport/issues). Please read our
