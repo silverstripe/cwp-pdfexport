@@ -2,6 +2,7 @@
 
 namespace CWP\PDFExport\Extensions;
 
+use SilverStripe\Assets\File;
 use SilverStripe\Control\Director;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\Versioned\Versioned;
@@ -49,8 +50,8 @@ class PdfExportExtension extends DataExtension
         $baseName = sprintf('%s-%s', $this->owner->URLSegment, $this->owner->ID);
 
         $folderPath = $this->owner->config()->get('generated_pdf_path');
-        if ($folderPath[0] != '/') {
-            $folderPath = BASE_PATH . '/' . $folderPath;
+        if ($folderPath[0] !== '/') {
+            $folderPath = File::join_paths(Director::publicFolder(), $folderPath);
         }
 
         return sprintf('%s/%s.pdf', $folderPath, $baseName);
