@@ -4,6 +4,7 @@ namespace CWP\PDFExport\Tests\Extensions;
 
 use CWP\CWP\PageTypes\BasePage;
 use CWP\PDFExport\Extensions\PdfExportExtension;
+use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
 
@@ -26,14 +27,29 @@ class PdfExportExtensionTest extends SapphireTest
             ->set(BasePage::class, 'generated_pdf_path', 'assets/_generated_pdfs');
     }
 
-    public function testPdfFilename()
+    /**
+     * @param string $publicDir
+     * @param string $expected
+     * @dataProvider pdfFilenameProvider
+     */
+    public function testPdfFilenameWithoutPublicDirectory($publicDir, $expected)
     {
+        Director::config()->set('alternate_public_dir', $publicDir);
+
+        /** @var BasePage|PdfExportExtension $page $page */
         $page = $this->objFromFixture(BasePage::class, 'test-page-one');
-        $this->assertContains(
-            'assets/_generated_pdfs/test-page-one-1.pdf',
-            $page->getPdfFilename(),
-            'Generated filename for PDF'
-        );
+        $this->assertContains($expected, $page->getPdfFilename());
+    }
+
+    /**
+     * @return array[]
+     */
+    public function pdfFilenameProvider()
+    {
+        return [
+            'no public folder' => ['', 'assets/_generated_pdfs/test-page-one-1.pdf'],
+            'public folder' => ['public', 'public/assets/_generated_pdfs/test-page-one-1.pdf'],
+        ];
     }
 
     public function testPdfLink()
