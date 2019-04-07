@@ -10,6 +10,7 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Environment;
 use SilverStripe\Core\Extension;
 use SilverStripe\Versioned\Versioned;
+use SilverStripe\Dev\Deprecation;
 
 class PdfExportControllerExtension extends Extension
 {
@@ -90,6 +91,10 @@ class PdfExportControllerExtension extends Extension
         }
 
         $binaryPath = $this->owner->data()->config()->get('wkhtmltopdf_binary');
+        if ($binaryPath) {
+            Deprecation::notice('3.0', 'wkhtmltopdf_binary config is deprecated. '.
+                'Use WKHTMLTOPDF_BINARY env var instead.');
+        }
         if (!$binaryPath || !is_executable($binaryPath)) {
             if (Environment::getEnv('WKHTMLTOPDF_BINARY')
                 && is_executable(Environment::getEnv('WKHTMLTOPDF_BINARY'))
