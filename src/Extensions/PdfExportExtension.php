@@ -42,7 +42,7 @@ class PdfExportExtension extends DataExtension
      * @config
      * @var string
      */
-    private static $generated_pdf_path = 'assets/_generated_pdfs';
+    private static $generated_pdf_path = 'public/assets/_generated_pdfs';
 
     /**
      * Return the full filename of the pdf file, including path & extension
