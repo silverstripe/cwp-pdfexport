@@ -1,42 +1,16 @@
-language: php
+version: ~> 1.0
 
-dist: xenial
+import:
+  - silverstripe/silverstripe-travis-shared:config/provision/standard-jobs-range.yml
 
-services:
-  - mysql
-
-env:
-  global:
-    - COMPOSER_ROOT_VERSION=1.1.x-dev
-
-matrix:
+jobs:
   include:
-    - php: 7.1
-      env: DB=MYSQL PHPUNIT_COVERAGE_TEST=1 CRONTASK=1
-    - php: 7.2
-      env: DB=MYSQL PHPUNIT_TEST=1
-    - php: 7.3
-      env: DB=MYSQL PHPUNIT_TEST=1
     - php: 7.4
-      env: DB=MYSQL PHPUNIT_TEST=1
+      env:
+        - DB=MYSQL
+        - PHPUNIT_TEST=1
+        - CRONTASK=1
 
 before_script:
-  # Init PHP
-  - phpenv rehash
-  - phpenv config-rm xdebug.ini
-  - echo 'memory_limit = 2048M' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+  - if [[ $CRONTASK ]]; then composer require silverstripe/crontask:^2; fi
 
-  # Install composer dependencies
-  - composer validate
-  - if [[ $CRONTASK ]]; then composer require --no-update silverstripe/crontask:^2; fi
-  # Fix for running phpunit 5 on php 7.4+
-  - composer require --no-update sminnee/phpunit-mock-objects:^3
-  - composer install --prefer-dist --no-interaction --no-progress --no-suggest --optimize-autoloader --verbose --profile
-
-script:
-  - if [[ $PHPUNIT_TEST ]]; then vendor/bin/phpunit; fi
-  - if [[ $PHPUNIT_COVERAGE_TEST ]]; then phpdbg -qrr vendor/bin/phpunit --coverage-clover=coverage.xml; fi
-  - if [[ $PHPCS_TEST ]]; then vendor/bin/phpcs src/ tests/; fi
-
-after_success:
-  - if [[ $PHPUNIT_COVERAGE_TEST ]]; then bash <(curl -s https://codecov.io/bash) -f coverage.xml; fi
