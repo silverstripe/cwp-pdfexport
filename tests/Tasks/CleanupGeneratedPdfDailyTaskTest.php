@@ -14,7 +14,7 @@ class CleanupGeneratedPdfDailyTaskTest extends SapphireTest
      */
     protected $task;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

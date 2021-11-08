@@ -18,7 +18,7 @@ class PdfExportExtensionTest extends SapphireTest
         ],
     ];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -38,7 +38,7 @@ class PdfExportExtensionTest extends SapphireTest
 
         /** @var BasePage|PdfExportExtension $page $page */
         $page = $this->objFromFixture(BasePage::class, 'test-page-one');
-        $this->assertContains($expected, $page->getPdfFilename());
+        $this->assertStringContainsString($expected, $page->getPdfFilename());
     }
 
     /**
@@ -55,13 +55,13 @@ class PdfExportExtensionTest extends SapphireTest
     public function testPdfLink()
     {
         $page = $this->objFromFixture(BasePage::class, 'test-page-one');
-        $this->assertContains('test-page-one/downloadpdf', $page->PdfLink(), 'Link to download PDF');
+        $this->assertStringContainsString('test-page-one/downloadpdf', $page->PdfLink(), 'Link to download PDF');
     }
 
     public function testHomePagePdfLink()
     {
         $page = $this->objFromFixture(BasePage::class, 'home-page');
-        $this->assertContains('home/downloadpdf', $page->PdfLink(), 'Link to download PDF');
+        $this->assertStringContainsString('home/downloadpdf', $page->PdfLink(), 'Link to download PDF');
     }
 
     public function testPdfLinkDisabled()
