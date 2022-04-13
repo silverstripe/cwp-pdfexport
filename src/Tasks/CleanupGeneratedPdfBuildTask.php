@@ -18,7 +18,7 @@ class CleanupGeneratedPdfBuildTask extends BuildTask
     public function run($request)
     {
         $path = sprintf('%s/%s', BASE_PATH, BasePage::config()->get('generated_pdf_path'));
-        if (!file_exists($path)) {
+        if (!file_exists($path ?? '')) {
             return false;
         }
 

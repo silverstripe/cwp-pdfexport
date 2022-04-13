@@ -70,8 +70,8 @@ class PdfExportExtension extends DataExtension
 
         $path = $this->getPdfFilename();
 
-        if ((Versioned::get_stage() === Versioned::LIVE) && file_exists($path)) {
-            return Director::baseURL() . preg_replace('#^/#', '', Director::makeRelative($path));
+        if ((Versioned::get_stage() === Versioned::LIVE) && file_exists($path ?? '')) {
+            return Director::baseURL() . preg_replace('#^/#', '', Director::makeRelative($path) ?? '');
         }
         return $this->owner->Link('downloadpdf');
     }
@@ -82,8 +82,8 @@ class PdfExportExtension extends DataExtension
     public function onAfterPublish()
     {
         $filepath = $this->getPdfFilename();
-        if (file_exists($filepath)) {
-            unlink($filepath);
+        if (file_exists($filepath ?? '')) {
+            unlink($filepath ?? '');
         }
     }
 
@@ -93,8 +93,8 @@ class PdfExportExtension extends DataExtension
     public function onAfterUnpublish()
     {
         $filepath = $this->getPdfFilename();
-        if (file_exists($filepath)) {
-            unlink($filepath);
+        if (file_exists($filepath ?? '')) {
+            unlink($filepath ?? '');
         }
     }
 }
