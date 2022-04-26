@@ -33,11 +33,11 @@ class PdfExportControllerExtension extends Extension
         Versioned::set_stage(Versioned::LIVE);
 
         $path = $this->owner->data()->getPdfFilename();
-        if (!file_exists($path)) {
+        if (!file_exists($path ?? '')) {
             $this->owner->generatePDF();
         }
 
-        return HTTPRequest::send_file(file_get_contents($path), basename($path), 'application/pdf');
+        return HTTPRequest::send_file(file_get_contents($path ?? ''), basename($path ?? ''), 'application/pdf');
     }
 
     /**
@@ -95,9 +95,9 @@ class PdfExportControllerExtension extends Extension
             Deprecation::notice('3.0', 'wkhtmltopdf_binary config is deprecated. '.
                 'Use WKHTMLTOPDF_BINARY env var instead.');
         }
-        if (!$binaryPath || !is_executable($binaryPath)) {
+        if (!$binaryPath || !is_executable($binaryPath ?? '')) {
             if (Environment::getEnv('WKHTMLTOPDF_BINARY')
-                && is_executable(Environment::getEnv('WKHTMLTOPDF_BINARY'))
+                && is_executable(Environment::getEnv('WKHTMLTOPDF_BINARY') ?? '')
             ) {
                 $binaryPath = Environment::getEnv('WKHTMLTOPDF_BINARY');
             }
@@ -118,12 +118,12 @@ class PdfExportControllerExtension extends Extension
 
         // prepare the paths
         $pdfFile = $this->owner->data()->getPdfFilename();
-        $bodyFile = str_replace('.pdf', '_pdf.html', $pdfFile);
-        $footerFile = str_replace('.pdf', '_pdffooter.html', $pdfFile);
+        $bodyFile = str_replace('.pdf', '_pdf.html', $pdfFile ?? '');
+        $footerFile = str_replace('.pdf', '_pdffooter.html', $pdfFile ?? '');
 
         // make sure the work directory exists
-        if (!file_exists(dirname($pdfFile))) {
-            Filesystem::makeFolder(dirname($pdfFile));
+        if (!file_exists(dirname($pdfFile ?? ''))) {
+            Filesystem::makeFolder(dirname($pdfFile ?? ''));
         }
 
         //decide the domain to use in generation
@@ -141,13 +141,13 @@ class PdfExportControllerExtension extends Extension
         $bodyViewer = $this->owner->getViewer('pdf');
 
         // write the output of this page to HTML, ready for conversion to PDF
-        file_put_contents($bodyFile, $bodyViewer->process($this->owner));
+        file_put_contents($bodyFile ?? '', $bodyViewer->process($this->owner));
 
         // get the viewer for the current template with _pdffooter
         $footerViewer = $this->owner->getViewer('pdffooter');
 
         // write the output of the footer template to HTML, ready for conversion to PDF
-        file_put_contents($footerFile, $footerViewer->process($this->owner));
+        file_put_contents($footerFile ?? '', $footerViewer->process($this->owner));
 
         //decide what the proxy should look like
         $proxy = $this->owner->getPDFProxy($pdfBaseUrl);
@@ -164,8 +164,8 @@ class PdfExportControllerExtension extends Extension
         );
 
         // remove temporary file
-        unlink($bodyFile);
-        unlink($footerFile);
+        unlink($bodyFile ?? '');
+        unlink($footerFile ?? '');
 
         // output any errors
         if ($retVal != 0) {
@@ -173,6 +173,6 @@ class PdfExportControllerExtension extends Extension
         }
 
         // serve the generated file
-        return HTTPRequest::send_file(file_get_contents($pdfFile), basename($pdfFile), 'application/pdf');
+        return HTTPRequest::send_file(file_get_contents($pdfFile ?? ''), basename($pdfFile ?? ''), 'application/pdf');
     }
 }
