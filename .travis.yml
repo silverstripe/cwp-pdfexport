@@ -3,6 +3,12 @@ version: ~> 1.0
 import:
   - silverstripe/silverstripe-travis-shared:config/provision/standard-jobs-range.yml
 
+env:
+  global:
+    # Require x-dev instead of ^ as defined in composer for php 8.1 compatibility
+    # This can be removed once a stable php 8.1 compatible version is released
+    - REQUIRE_EXTRA="silverstripe/hybridsessions:4.x-dev"
+
 jobs:
   include:
     - php: 7.4
