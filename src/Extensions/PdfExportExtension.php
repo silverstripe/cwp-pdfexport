@@ -29,7 +29,7 @@ class PdfExportExtension extends DataExtension
      * should be the full path to the binary (e.g. /usr/local/bin/wkhtmltopdf)
      * @see BasePage_Controller::generatePDF();
      *
-     * @deprecated 3.0 Use WKHTMLTOPDF_BINARY env var instead
+     * @deprecated 3.0.0 Use WKHTMLTOPDF_BINARY env var instead
      *
      * @config
      * @var string|null
