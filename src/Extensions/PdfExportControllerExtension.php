@@ -2,6 +2,7 @@
 
 namespace CWP\PDFExport\Extensions;
 
+use JetBrains\PhpStorm\Deprecated;
 use SilverStripe\Assets\Filesystem;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
@@ -90,7 +91,9 @@ class PdfExportControllerExtension extends Extension
             return false;
         }
 
-        $binaryPath = $this->owner->data()->config()->get('wkhtmltopdf_binary');
+        $binaryPath = Deprecation::withNoReplacement(function () {
+            return $this->owner->data()->config()->get('wkhtmltopdf_binary');
+        });
         if ($binaryPath) {
             Deprecation::notice('3.0', 'wkhtmltopdf_binary config is deprecated. '.
                 'Use WKHTMLTOPDF_BINARY env var instead.');
