@@ -12,6 +12,7 @@ use SilverStripe\Core\Environment;
 use SilverStripe\Core\Extension;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\Dev\Deprecation;
+use SilverStripe\CMS\Controllers\ContentController;
 
 class PdfExportControllerExtension extends Extension
 {
@@ -28,6 +29,10 @@ class PdfExportControllerExtension extends Extension
     {
         if (!$this->owner->data()->config()->get('pdf_export')) {
             return false;
+        }
+        $binaryPath = $this->getBinaryPath();
+        if (!$binaryPath) {
+            return HTTPResponse::create('PDF download is not available', 400);
         }
 
         // We only allow producing live pdf. There is no way to secure the draft files.
@@ -80,12 +85,7 @@ class PdfExportControllerExtension extends Extension
         return $proxy;
     }
 
-    /**
-     * Render the page as PDF using wkhtmltopdf.
-     *
-     * @return HTTPResponse|false
-     */
-    public function generatePDF()
+    private function getBinaryPath()
     {
         if (!$this->owner->data()->config()->get('pdf_export')) {
             return false;
@@ -105,7 +105,20 @@ class PdfExportControllerExtension extends Extension
                 $binaryPath = Environment::getEnv('WKHTMLTOPDF_BINARY');
             }
         }
+        return $binaryPath;
+    }
 
+    /**
+     * Render the page as PDF using wkhtmltopdf.
+     *
+     * @return HTTPResponse|false
+     */
+    public function generatePDF()
+    {
+        if (!$this->owner->data()->config()->get('pdf_export')) {
+            return false;
+        }
+        $binaryPath = $this->getBinaryPath();
         if (!$binaryPath) {
             user_error(
                 'Neither WKHTMLTOPDF_BINARY nor ' . get_class($this->owner->data()) . '.wkhtmltopdf_binary are defined',

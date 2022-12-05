@@ -24,7 +24,8 @@ class PdfExportExtensionTest extends SapphireTest
 
         Config::modify()
             ->set(BasePage::class, 'pdf_export', true)
-            ->set(BasePage::class, 'generated_pdf_path', 'assets/_generated_pdfs');
+            ->set(BasePage::class, 'generated_pdf_path', 'assets/_generated_pdfs')
+            ->set(BasePage::class, 'bypass_pdf_binary_check', true);
     }
 
     /**
