@@ -6,6 +6,8 @@ use SilverStripe\Assets\File;
 use SilverStripe\Control\Director;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\Versioned\Versioned;
+use SilverStripe\Dev\Deprecation;
+use SilverStripe\Core\Environment;
 
 class PdfExportExtension extends DataExtension
 {
@@ -22,6 +24,12 @@ class PdfExportExtension extends DataExtension
      * @var string
      */
     private static $pdf_base_url = '';
+
+    /**
+     * Used to bypass the check to see if the wkhtmltopdf binary is avilable
+     * Only used for unit testing
+     */
+    private static bool $bypass_pdf_binary_check = false;
 
     /**
      * Allow custom overriding of the path to the WKHTMLTOPDF binary, in cases
@@ -66,6 +74,24 @@ class PdfExportExtension extends DataExtension
     {
         if (!$this->owner->config()->get('pdf_export')) {
             return false;
+        }
+
+        if (!$this->owner->config()->get('bypass_pdf_binary_check')) {
+            $binaryPath = $this->owner->config()->get('wkhtmltopdf_binary');
+            if ($binaryPath) {
+                Deprecation::notice('3.0', 'wkhtmltopdf_binary config is deprecated. '.
+                    'Use WKHTMLTOPDF_BINARY env var instead.');
+            }
+            if (!$binaryPath || !is_executable($binaryPath ?? '')) {
+                if (Environment::getEnv('WKHTMLTOPDF_BINARY')
+                    && is_executable(Environment::getEnv('WKHTMLTOPDF_BINARY') ?? '')
+                ) {
+                    $binaryPath = Environment::getEnv('WKHTMLTOPDF_BINARY');
+                }
+            }
+            if (!$binaryPath) {
+                return false;
+            }
         }
 
         $path = $this->getPdfFilename();
