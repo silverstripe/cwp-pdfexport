@@ -9,8 +9,8 @@
     "license": "BSD-3-Clause",
     "require": {
         "php": "^7.3 || ^8.0",
-        "silverstripe/framework": "4.13.x-dev",
-        "cwp/cwp": "2.11.x-dev"
+        "silverstripe/framework": "4.13.0-beta1",
+        "cwp/cwp": "2.11.0-beta1"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5",
